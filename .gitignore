@@ -6,3 +6,5 @@ x64
 Chess/Libraries
 Chess/x64
 Chess/glad.c
+Chess/assimp-vc142-mtd.dll
+Chess/stb_image.h
