@@ -41,6 +41,9 @@
     <ClInclude Include="Camera.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="Board.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="blackTileShader.fs">
@@ -58,11 +61,11 @@
     <None Include="coordinateSystem.vs">
       <Filter>shaders</Filter>
     </None>
-    <None Include="model_loading.fs">
-      <Filter>Pliki nagłówkowe</Filter>
+    <None Include="boardShader.vs">
+      <Filter>shaders</Filter>
     </None>
-    <None Include="model_loading.vs">
-      <Filter>Pliki nagłówkowe</Filter>
+    <None Include="boardShader.fs">
+      <Filter>shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

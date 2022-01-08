@@ -149,6 +149,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Board.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
@@ -159,8 +160,8 @@
     <None Include="blackTileShader.fs" />
     <None Include="coordinateSystem.fs" />
     <None Include="coordinateSystem.vs" />
-    <None Include="model_loading.fs" />
-    <None Include="model_loading.vs" />
+    <None Include="boardShader.fs" />
+    <None Include="boardShader.vs" />
     <None Include="shader.vs" />
     <None Include="whiteTileShader.fs" />
   </ItemGroup>

@@ -8,6 +8,7 @@
 #include "Shader.h"
 #include "camera.h"
 #include "Model.h"
+#include "Board.h"
 
 #include <iostream>
 
@@ -68,10 +69,12 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     // load shaders
-    Shader boardShader("model_loading.vs", "model_loading.fs");
+    //Shader boardShader("boardShader.vs", "boardShader.fs");
 
-    // load models
-    Model boardModel("resources/board/board.obj");
+    //// load models
+    //Model boardModel("resources/board/board.obj");
+
+    Board board;
 
 
     // draw in wireframe
@@ -91,31 +94,29 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // don't forget to enable shader before setting uniforms
-        boardShader.use();
+        // BOARD
+        board.use();
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        boardShader.setMat4("projection", projection);
-        boardShader.setMat4("view", view);
+        board.setMat4("projection", projection);
+        board.setMat4("view", view);
 
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-        boardShader.setMat4("model", model);
-        boardModel.Draw(boardShader);
+        board.setMat4("model", model);
+        board.Draw();
+
+        // PIECES
 
 
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
 }
