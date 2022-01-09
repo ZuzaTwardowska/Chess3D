@@ -10,7 +10,7 @@ public:
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, translateVec);
-		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, rotationValue, glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, scaleMatrix);
 		setMat4("projection", projection);
 		setMat4("view", view);

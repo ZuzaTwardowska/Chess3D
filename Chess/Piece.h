@@ -8,7 +8,9 @@ class Piece {
 
 public:
 	int x, y;
+	bool isKnockedDown = false;
 	glm::vec3 translateToInitialPos;
+	float rotationValue = glm::radians(-90.0f);
 	glm::vec3 translateVec;
 	glm::vec3 scaleMatrix = glm::vec3(0.5f, 0.5f, 0.5f);
 	Piece(string model, Shader shader, glm::vec3 initialPos, int x, int y) :model(Model(model)), shader(shader), translateToInitialPos(initialPos), x(x), y(y), translateVec(initialPos) {};
@@ -17,7 +19,14 @@ public:
 		shader.setMat4(name, mat);
 	}
 	void Draw() {
-		model.Draw(shader);
+		if(!isKnockedDown)
+			model.Draw(shader);
 	}
 	virtual void set(Camera camera, int width, int height) {};
+	void Move(glm::vec3 moveVector) {
+		translateVec += moveVector;
+	}
+	void KnockDown(float angle) {
+		rotationValue = glm::radians(angle);
+	}
 };

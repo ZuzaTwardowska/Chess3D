@@ -23,6 +23,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 void startSequence();
+void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]);
 
 // settings
 const unsigned int SCR_WIDTH = 1500;
@@ -37,6 +38,17 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+float sequenceStartTime = -1.0f;
+int currentMove = -1;
+glm::vec3 sequenceMoves[] = {
+    glm::vec3(9.5f, 0.0f, -4.2f),
+    glm::vec3(9.5f, 0.0f, -7.45f),
+    glm::vec3(12.0f, 0.0f, -4.2f),
+    glm::vec3(12.0f, 0.0f, -4.3f),
+    glm::vec3(-7.5f, 0.0f, -9.1f),
+
+};
 
 int main()
 {
@@ -115,14 +127,10 @@ int main()
         new Rook(glm::vec3(0.8f, 0.0f, -0.7f), "black",7,7),
     };
 
-
-
-    // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     while (!glfwWindowShouldClose(window))
     {
-
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -131,6 +139,10 @@ int main()
 
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // MOVE SEQUENCE
+        if (currentMove!=-1 && currentMove<5) {
+            runSequence(currentFrame, whitePieces, blackPieces);
+        }
 
         // BOARD
         board.use();
@@ -211,5 +223,60 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 }
 
 void startSequence() {
+    if (sequenceStartTime != -1.0f) return;
+        currentMove = 0;
+        sequenceStartTime = (float)glfwGetTime();
+}
 
+void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) {
+    switch (currentMove) {
+    case 0: {
+        if (whitePieces[4]->translateVec[2] > sequenceMoves[0][2])
+            whitePieces[4]->Move((currentTime - sequenceStartTime) * (sequenceMoves[0] - (whitePieces[4]->translateToInitialPos)) / 10.0f);
+        else {
+            currentMove = 1; 
+            sequenceStartTime = (float)glfwGetTime();
+        }
+        break;
+    }
+    case 1: {
+        if (blackPieces[4]->translateVec[2] < sequenceMoves[1][2])
+            blackPieces[4]->Move((currentTime - sequenceStartTime) * (sequenceMoves[1] - (blackPieces[4]->translateToInitialPos)) / 10.0f);
+        else {
+            currentMove = 2;
+            sequenceStartTime = (float)glfwGetTime();
+        }
+        break;
+    }
+    case 2: {
+        if (whitePieces[5]->translateVec[2] > sequenceMoves[2][2])
+            whitePieces[5]->Move((currentTime - sequenceStartTime) * (sequenceMoves[2] - (whitePieces[5]->translateToInitialPos)) / 10.0f);
+        else {
+            currentMove = 3;
+            sequenceStartTime = (float)glfwGetTime();
+        }
+        break;
+    }
+    case 3: {
+        if (blackPieces[4]->translateVec[2] < sequenceMoves[3][2]) {
+            blackPieces[4]->Move((currentTime - sequenceStartTime) * (sequenceMoves[3] - (blackPieces[4]->translateVec)) / 10.0f);
+            whitePieces[5]->KnockDown(-90 + (currentTime - sequenceStartTime) * 25.0f);
+        }
+        else {
+            sequenceStartTime = (float)glfwGetTime();
+            whitePieces[5]->isKnockedDown = true;
+            currentMove = 4;
+        }
+        break;
+    }
+    case 4: {
+        if (whitePieces[12]->translateVec[2] > sequenceMoves[4][2])
+            whitePieces[12]->Move((currentTime - sequenceStartTime) * (sequenceMoves[4] - (whitePieces[12]->translateVec)) / 10.0f);
+        else {
+            currentMove = 5;
+        }
+        break;
+    }
+    default:break;
+    }
 }
