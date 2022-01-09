@@ -11,6 +11,12 @@
 #include "Board.h"
 
 #include <iostream>
+#include "Pawn.h"
+#include "Rook.h"
+#include "Knight.h"
+#include "Bishop.h"
+#include "Queen.h"
+#include "King.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -68,13 +74,46 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
-    // load shaders
-    //Shader boardShader("boardShader.vs", "boardShader.fs");
-
-    //// load models
-    //Model boardModel("resources/board/board.obj");
-
     Board board;
+    float left = -0.7f;
+    float xStep = 2.55f;
+    Piece* whitePieces[] = {
+        new Pawn(glm::vec3(left, 0.0f, 0.6f),"white"),
+        new Pawn(glm::vec3(left+xStep, 0.0f, 0.6f), "white"),
+        new Pawn(glm::vec3(left+2*xStep, 0.0f, 0.6f), "white"),
+        new Pawn(glm::vec3(left+3*xStep, 0.0f, 0.6f), "white"),
+        new Pawn(glm::vec3(left+4*xStep, 0.0f, 0.6f), "white"),
+        new Pawn(glm::vec3(left+5*xStep, 0.0f, 0.6f), "white"),
+        new Pawn(glm::vec3(left+6*xStep, 0.0f, 0.6f), "white"),
+        new Pawn(glm::vec3(left+7*xStep, 0.0f, 0.6f), "white"),
+        new Rook(glm::vec3(-17.2f, 0.0f, 17.2f), "white"),
+        new Knight(glm::vec3(-0.5f, 0.0f, 0.8f), "white"),
+        new Bishop(glm::vec3(-0.15f, 0.0f, 0.8f), "white"),
+        new Queen(glm::vec3(0.0f, 0.0f, 0.8f), "white"),
+        new King(glm::vec3(0.05f, 0.0f, 0.8f), "white"),
+        new Bishop(glm::vec3(7.35f, 0.0f, 0.8f), "white"),
+        new Knight(glm::vec3(12.3f, 0.0f, 0.8f), "white"),
+        new Rook(glm::vec3(0.8f, 0.0f, 17.2f), "white"),
+    };
+    Piece* blackPieces[] = {
+        new Pawn(glm::vec3(left, 0.0f, -12.25f),"black"),
+        new Pawn(glm::vec3(left + xStep, 0.0f, -12.25f), "black"),
+        new Pawn(glm::vec3(left + 2 * xStep, 0.0f, -12.25f), "black"),
+        new Pawn(glm::vec3(left + 3 * xStep, 0.0f, -12.25f), "black"),
+        new Pawn(glm::vec3(left + 4 * xStep, 0.0f, -12.25f), "black"),
+        new Pawn(glm::vec3(left + 5 * xStep, 0.0f, -12.25f), "black"),
+        new Pawn(glm::vec3(left + 6 * xStep, 0.0f, -12.25f), "black"),
+        new Pawn(glm::vec3(left + 7 * xStep, 0.0f, -12.25f), "black"),
+        new Rook(glm::vec3(-17.2f, 0.0f, -0.7f), "black"),
+        new Knight(glm::vec3(-0.5f, 0.0f, -17.15f), "black"),
+        new Bishop(glm::vec3(-0.15f, 0.0f, -17.15f), "black"),
+        new Queen(glm::vec3(0.0f, 0.0f, -17.15f), "black"),
+        new King(glm::vec3(0.05f, 0.0f, -17.15f), "black"),
+        new Bishop(glm::vec3(7.35f, 0.0f, -17.15f), "black"),
+        new Knight(glm::vec3(12.3f, 0.0f, -17.15f), "black"),
+        new Rook(glm::vec3(0.8f, 0.0f, -0.7f), "black"),
+    };
+
 
 
     // draw in wireframe
@@ -87,36 +126,33 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-
         processInput(window);
-
 
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // BOARD
         board.use();
-
-        // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 view = camera.GetViewMatrix();
-        board.setMat4("projection", projection);
-        board.setMat4("view", view);
-
-        // render the loaded model
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-        board.setMat4("model", model);
+        board.set(camera, SCR_WIDTH,SCR_HEIGHT);
         board.Draw();
 
         // PIECES
-
+        for (int i = 0; i < 16; i++) {
+            (*whitePieces[i]).use();
+            (*whitePieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT);
+            (*whitePieces[i]).Draw();
+            (*blackPieces[i]).use();
+            (*blackPieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT);
+            (*blackPieces[i]).Draw();
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
+    for (int i = 0; i < 16; i++) {
+        free(whitePieces[i]);
+        free(blackPieces[i]);
+    }
     glfwTerminate();
     return 0;
 }

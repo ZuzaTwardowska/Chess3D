@@ -44,27 +44,39 @@
     <ClInclude Include="Board.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="Piece.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Rook.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Knight.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Bishop.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="King.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Queen.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="blackTileShader.fs">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shader.vs">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="whiteTileShader.fs">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="coordinateSystem.fs">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="coordinateSystem.vs">
-      <Filter>shaders</Filter>
-    </None>
     <None Include="boardShader.vs">
       <Filter>shaders</Filter>
     </None>
     <None Include="boardShader.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="pieceShader.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="pieceShader.fs">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

@@ -12,5 +12,5 @@ newmtl 12930_WoodenChessNightSideA
 	Kd 1.0000 1.0000 1.0000
 	Ks 0.5400 0.5400 0.5400
 	Ke 0.0000 0.0000 0.0000
-	map_Ka 12930_WoodenChessNightSideA_diffuse.jpg
-	map_Kd 12930_WoodenChessNightSideA_diffuse.jpg
+map_Ka diffuse.png
+map_Kd diffuse.png
