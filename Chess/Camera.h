@@ -111,7 +111,16 @@ public:
         if (Zoom > 45.0f)
             Zoom = 45.0f;
     }
-
+    void StandardCamera(float deltaTime) {
+        Position = glm::vec3(0.0f, 20.0f, 25.0f);
+        WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+        Yaw = YAW;
+        Pitch = PITCH;
+        Front = glm::vec3(0.0f, 0.0f, -1.0f);
+        updateCameraVectors();
+    };
+    void BoundToObjectCamera(float deltaTime) {};
+    void ObjectCamera(float deltaTime) {};
 private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors()

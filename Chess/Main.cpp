@@ -22,6 +22,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+void startSequence();
 
 // settings
 const unsigned int SCR_WIDTH = 1500;
@@ -78,40 +79,40 @@ int main()
     float left = -0.7f;
     float xStep = 2.55f;
     Piece* whitePieces[] = {
-        new Pawn(glm::vec3(left, 0.0f, 0.6f),"white"),
-        new Pawn(glm::vec3(left+xStep, 0.0f, 0.6f), "white"),
-        new Pawn(glm::vec3(left+2*xStep, 0.0f, 0.6f), "white"),
-        new Pawn(glm::vec3(left+3*xStep, 0.0f, 0.6f), "white"),
-        new Pawn(glm::vec3(left+4*xStep, 0.0f, 0.6f), "white"),
-        new Pawn(glm::vec3(left+5*xStep, 0.0f, 0.6f), "white"),
-        new Pawn(glm::vec3(left+6*xStep, 0.0f, 0.6f), "white"),
-        new Pawn(glm::vec3(left+7*xStep, 0.0f, 0.6f), "white"),
-        new Rook(glm::vec3(-17.2f, 0.0f, 17.2f), "white"),
-        new Knight(glm::vec3(-0.5f, 0.0f, 0.8f), "white"),
-        new Bishop(glm::vec3(-0.15f, 0.0f, 0.8f), "white"),
-        new Queen(glm::vec3(0.0f, 0.0f, 0.8f), "white"),
-        new King(glm::vec3(0.05f, 0.0f, 0.8f), "white"),
-        new Bishop(glm::vec3(7.35f, 0.0f, 0.8f), "white"),
-        new Knight(glm::vec3(12.3f, 0.0f, 0.8f), "white"),
-        new Rook(glm::vec3(0.8f, 0.0f, 17.2f), "white"),
+        new Pawn(glm::vec3(left, 0.0f, 0.6f),"white",1,0),
+        new Pawn(glm::vec3(left + xStep, 0.0f, 0.6f), "white",1,1),
+        new Pawn(glm::vec3(left + 2 * xStep, 0.0f, 0.6f), "white",1,2),
+        new Pawn(glm::vec3(left + 3 * xStep, 0.0f, 0.6f), "white",1,3),
+        new Pawn(glm::vec3(left + 4 * xStep, 0.0f, 0.6f), "white",1,4),
+        new Pawn(glm::vec3(left + 5 * xStep, 0.0f, 0.6f), "white",1,5),
+        new Pawn(glm::vec3(left + 6 * xStep, 0.0f, 0.6f), "white",1,6),
+        new Pawn(glm::vec3(left + 7 * xStep, 0.0f, 0.6f), "white",1,7),
+        new Rook(glm::vec3(-17.2f, 0.0f, 17.2f), "white",0,0),
+        new Knight(glm::vec3(-0.5f, 0.0f, 0.8f), "white",0,1),
+        new Bishop(glm::vec3(-0.15f, 0.0f, 0.8f), "white",0,2),
+        new Queen(glm::vec3(0.0f, 0.0f, 0.8f), "white",0,3),
+        new King(glm::vec3(0.05f, 0.0f, 0.8f), "white",0,4),
+        new Bishop(glm::vec3(7.35f, 0.0f, 0.8f), "white",0,5),
+        new Knight(glm::vec3(12.3f, 0.0f, 0.8f), "white",0,6),
+        new Rook(glm::vec3(0.8f, 0.0f, 17.2f), "white",0,7),
     };
     Piece* blackPieces[] = {
-        new Pawn(glm::vec3(left, 0.0f, -12.25f),"black"),
-        new Pawn(glm::vec3(left + xStep, 0.0f, -12.25f), "black"),
-        new Pawn(glm::vec3(left + 2 * xStep, 0.0f, -12.25f), "black"),
-        new Pawn(glm::vec3(left + 3 * xStep, 0.0f, -12.25f), "black"),
-        new Pawn(glm::vec3(left + 4 * xStep, 0.0f, -12.25f), "black"),
-        new Pawn(glm::vec3(left + 5 * xStep, 0.0f, -12.25f), "black"),
-        new Pawn(glm::vec3(left + 6 * xStep, 0.0f, -12.25f), "black"),
-        new Pawn(glm::vec3(left + 7 * xStep, 0.0f, -12.25f), "black"),
-        new Rook(glm::vec3(-17.2f, 0.0f, -0.7f), "black"),
-        new Knight(glm::vec3(-0.5f, 0.0f, -17.15f), "black"),
-        new Bishop(glm::vec3(-0.15f, 0.0f, -17.15f), "black"),
-        new Queen(glm::vec3(0.0f, 0.0f, -17.15f), "black"),
-        new King(glm::vec3(0.05f, 0.0f, -17.15f), "black"),
-        new Bishop(glm::vec3(7.35f, 0.0f, -17.15f), "black"),
-        new Knight(glm::vec3(12.3f, 0.0f, -17.15f), "black"),
-        new Rook(glm::vec3(0.8f, 0.0f, -0.7f), "black"),
+        new Pawn(glm::vec3(left, 0.0f, -12.25f),"black",6,0),
+        new Pawn(glm::vec3(left + xStep, 0.0f, -12.25f), "black",6,1),
+        new Pawn(glm::vec3(left + 2 * xStep, 0.0f, -12.25f), "black",6,2),
+        new Pawn(glm::vec3(left + 3 * xStep, 0.0f, -12.25f), "black",6,3),
+        new Pawn(glm::vec3(left + 4 * xStep, 0.0f, -12.25f), "black",6,4),
+        new Pawn(glm::vec3(left + 5 * xStep, 0.0f, -12.25f), "black",6,5),
+        new Pawn(glm::vec3(left + 6 * xStep, 0.0f, -12.25f), "black",6,6),
+        new Pawn(glm::vec3(left + 7 * xStep, 0.0f, -12.25f), "black",6,7),
+        new Rook(glm::vec3(-17.2f, 0.0f, -0.7f), "black",7,0),
+        new Knight(glm::vec3(-0.5f, 0.0f, -17.15f), "black",7,1),
+        new Bishop(glm::vec3(-0.15f, 0.0f, -17.15f), "black",7,2),
+        new Queen(glm::vec3(0.0f, 0.0f, -17.15f), "black",7,3),
+        new King(glm::vec3(0.05f, 0.0f, -17.15f), "black",7,4),
+        new Bishop(glm::vec3(7.35f, 0.0f, -17.15f), "black",7,5),
+        new Knight(glm::vec3(12.3f, 0.0f, -17.15f), "black",7,6),
+        new Rook(glm::vec3(0.8f, 0.0f, -0.7f), "black",7,7),
     };
 
 
@@ -170,6 +171,15 @@ void processInput(GLFWwindow* window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+        camera.StandardCamera(deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+        camera.BoundToObjectCamera(deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+        camera.ObjectCamera(deltaTime);
+
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        startSequence();
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -187,7 +197,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     }
 
     float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    float yoffset = lastY - ypos;
 
     lastX = xpos;
     lastY = ypos;
@@ -198,4 +208,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(yoffset);
+}
+
+void startSequence() {
+
 }
