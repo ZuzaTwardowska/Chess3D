@@ -34,6 +34,7 @@ Camera camera(glm::vec3(0.0f, 20.0f, 25.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
+bool boundToObject = false, afterObject = false;
 
 // timing
 float deltaTime = 0.0f;
@@ -187,12 +188,21 @@ void processInput(GLFWwindow* window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+        boundToObject = false;
+        afterObject = false;
         camera.StandardCamera(deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+    }
+    if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
+        boundToObject = true;
+        afterObject = false;
         camera.BoundToObjectCamera(deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+    }
+    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+        boundToObject = false;
+        afterObject = true;
         camera.ObjectCamera(deltaTime);
+    }
 
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         startSequence();
@@ -234,6 +244,7 @@ void startSequence() {
 
 void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) {
     glm::vec3 newPosition = glm::vec3(-100.0f,-100.f,-100.0f);
+    float front = 1.8f;
     switch (currentMove) {
     case 0: {
         if (whitePieces[4]->translateVec[2] > sequenceMoves[0][2]) {
@@ -250,8 +261,10 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
         if (blackPieces[4]->translateVec[2] < sequenceMoves[1][2]) {
             newPosition = blackPieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[1] - (blackPieces[4]->translateToInitialPos)) / 50.0f;
             blackPieces[4]->Move(newPosition);
+            front = -1.0f;
         }
         else {
+            front = -1.0f;
             currentMove = 2;
             sequenceStartTime = (float)glfwGetTime();
         }
@@ -270,11 +283,13 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
     }
     case 3: {
         if (blackPieces[4]->translateVec[2] < sequenceMoves[3][2]) {
-            newPosition = blackPieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[3] - (blackPieces[4]->translateVec)) / 40.0f;
+            front = -1.0f;
+            newPosition = blackPieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[3] - (blackPieces[4]->translateVec)) / 30.0f;
             blackPieces[4]->Move(newPosition);
-            whitePieces[5]->KnockDown(-90 + (currentTime - sequenceStartTime) * 10.0f);
+            whitePieces[5]->KnockDown(-90 + (currentTime - sequenceStartTime) * 8.0f);
         }
         else {
+            front = -1.0f;
             sequenceStartTime = (float)glfwGetTime();
             whitePieces[5]->isKnockedDown = true;
             currentMove = 4;
@@ -294,6 +309,9 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
     default:break;
     }
     if (newPosition != glm::vec3(-100.0f, -100.f, -100.0f)) {
-        camera.SetViewMatrix(glm::lookAt(camera.Position, newPosition, camera.Up));
+        if(boundToObject) camera.SetViewMatrix(glm::lookAt(camera.Position, newPosition, camera.Up));
+        if (afterObject) { 
+            camera.SetViewMatrix(glm::lookAt(newPosition + glm::vec3(-12.0f, 25.0f, front * 20.0f), glm::vec3(0.0f, 0.0f, -front * 15.0f), camera.Up));
+        }
     }
 }
