@@ -24,7 +24,7 @@ public:
 	}
 	virtual void set(Camera camera, int width, int height) {};
 	void Move(glm::vec3 moveVector) {
-		translateVec += moveVector;
+		translateVec = moveVector;
 	}
 	void KnockDown(float angle) {
 		rotationValue = glm::radians(angle);
