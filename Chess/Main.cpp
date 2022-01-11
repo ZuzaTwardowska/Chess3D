@@ -47,10 +47,10 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 float sequenceStartTime = -1.0f;
 int currentMove = -1;
 glm::vec3 sequenceMoves[] = {
-    glm::vec3(9.5f, 0.0f, -4.2f),
-    glm::vec3(9.5f, 0.0f, -7.45f),
-    glm::vec3(12.0f, 0.0f, -4.2f),
-    glm::vec3(12.0f, 0.0f, -4.3f),
+    glm::vec3(9.5f, 0.0f, -4.4f),
+    glm::vec3(9.5f, 0.0f, -7.25f),
+    glm::vec3(12.0f, 0.0f, -4.4f),
+    glm::vec3(12.0f, 0.0f, -4.4f),
     glm::vec3(-7.5f, 0.0f, -9.1f),
 
 };
@@ -107,8 +107,8 @@ int main()
         new Rook(glm::vec3(-17.2f, 0.0f, 17.2f), "white",0,0),
         new Knight(glm::vec3(-0.5f, 0.0f, 0.8f), "white",0,1),
         new Bishop(glm::vec3(-0.15f, 0.0f, 0.8f), "white",0,2),
-        new Queen(glm::vec3(0.0f, 0.0f, 0.8f), "white",0,3),
-        new King(glm::vec3(0.05f, 0.0f, 0.8f), "white",0,4),
+        new King(glm::vec3(-2.45f, 0.0f, 0.8f), "white",0,4),
+        new Queen(glm::vec3(2.5f, 0.0f, 0.8f), "white",0,3),
         new Bishop(glm::vec3(7.35f, 0.0f, 0.8f), "white",0,5),
         new Knight(glm::vec3(12.3f, 0.0f, 0.8f), "white",0,6),
         new Rook(glm::vec3(0.8f, 0.0f, 17.2f), "white",0,7),
@@ -125,8 +125,8 @@ int main()
         new Rook(glm::vec3(-17.2f, 0.0f, -0.7f), "black",7,0),
         new Knight(glm::vec3(-0.5f, 0.0f, -17.15f), "black",7,1),
         new Bishop(glm::vec3(-0.15f, 0.0f, -17.15f), "black",7,2),
-        new Queen(glm::vec3(0.0f, 0.0f, -17.15f), "black",7,3),
-        new King(glm::vec3(0.05f, 0.0f, -17.15f), "black",7,4),
+        new King(glm::vec3(-2.45f, 0.0f, -17.15f), "black",7,4),
+        new Queen(glm::vec3(2.5f, 0.0f, -17.15f), "black",7,3),
         new Bishop(glm::vec3(7.35f, 0.0f, -17.15f), "black",7,5),
         new Knight(glm::vec3(12.3f, 0.0f, -17.15f), "black",7,6),
         new Rook(glm::vec3(0.8f, 0.0f, -0.7f), "black",7,7),
@@ -248,7 +248,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
     switch (currentMove) {
     case 0: {
         if (whitePieces[4]->translateVec[2] > sequenceMoves[0][2]) {
-            newPosition = whitePieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[0] - (whitePieces[4]->translateToInitialPos)) / 50.0f;
+            newPosition = whitePieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[0] - (whitePieces[4]->translateToInitialPos)) / 100.0f;
             whitePieces[4]->Move(newPosition);
         }
         else {
@@ -259,7 +259,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
     }
     case 1: {
         if (blackPieces[4]->translateVec[2] < sequenceMoves[1][2]) {
-            newPosition = blackPieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[1] - (blackPieces[4]->translateToInitialPos)) / 50.0f;
+            newPosition = blackPieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[1] - (blackPieces[4]->translateToInitialPos)) / 100.0f;
             blackPieces[4]->Move(newPosition);
             front = -1.0f;
         }
@@ -267,12 +267,13 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
             front = -1.0f;
             currentMove = 2;
             sequenceStartTime = (float)glfwGetTime();
+            blackPieces[4]->translateToInitialPos = blackPieces[4]->translateVec;
         }
         break;
     }
     case 2: {
         if (whitePieces[5]->translateVec[2] > sequenceMoves[2][2]) {
-            newPosition = whitePieces[5]->translateVec + (currentTime - sequenceStartTime)* (sequenceMoves[2] - (whitePieces[5]->translateToInitialPos)) / 50.0f;
+            newPosition = whitePieces[5]->translateVec + (currentTime - sequenceStartTime)* (sequenceMoves[2] - (whitePieces[5]->translateToInitialPos)) / 100.0f;
             whitePieces[5]->Move(newPosition);
         }
         else {
@@ -284,9 +285,9 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
     case 3: {
         if (blackPieces[4]->translateVec[2] < sequenceMoves[3][2]) {
             front = -1.0f;
-            newPosition = blackPieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[3] - (blackPieces[4]->translateVec)) / 30.0f;
+            newPosition = blackPieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[3] - (blackPieces[4]->translateToInitialPos)) / 50.0f;
             blackPieces[4]->Move(newPosition);
-            whitePieces[5]->KnockDown(-90 + (currentTime - sequenceStartTime) * 8.0f);
+            whitePieces[5]->KnockDown(-90 + (currentTime - sequenceStartTime) * 25.0f);
         }
         else {
             front = -1.0f;
@@ -298,7 +299,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
     }
     case 4: {
         if (whitePieces[12]->translateVec[2] > sequenceMoves[4][2]) {
-            newPosition = whitePieces[12]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[4] - (whitePieces[12]->translateVec)) / 50.0f;
+            newPosition = whitePieces[12]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[4] - (whitePieces[12]->translateToInitialPos)) / 100.0f;
             whitePieces[12]->Move(newPosition);
         }
         else {
@@ -311,7 +312,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
     if (newPosition != glm::vec3(-100.0f, -100.f, -100.0f)) {
         if(boundToObject) camera.SetViewMatrix(glm::lookAt(camera.Position, newPosition, camera.Up));
         if (afterObject) { 
-            camera.SetViewMatrix(glm::lookAt(newPosition + glm::vec3(-12.0f, 25.0f, front * 20.0f), glm::vec3(0.0f, 0.0f, -front * 15.0f), camera.Up));
+            camera.SetViewMatrix(glm::lookAt(glm::vec3(0.0f, 25.0f, newPosition[2] + front * 25.0f), glm::vec3(0.0f, 0.0f, -front * 15.0f), camera.Up));
         }
     }
 }
