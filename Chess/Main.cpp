@@ -41,7 +41,12 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 mainReflector(0.0f, 25.0f, 0.0f);
+glm::vec3 reflectors[] = {
+    glm::vec3(20.0f, 25.0f, 0.0f),
+    glm::vec3(-20.0f, 25.0f, 0.0f), 
+    glm::vec3(0.0f, 25.0f, 0.0f),
+};
+glm::vec3 reflectorDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 
 // sequence
 float sequenceStartTime = -1.0f;
@@ -151,16 +156,16 @@ int main()
 
         // BOARD
         board.use();
-        board.set(camera, SCR_WIDTH,SCR_HEIGHT, mainReflector);
+        board.set(camera, SCR_WIDTH,SCR_HEIGHT, reflectors, reflectorDirection);
         board.Draw();
 
         // PIECES
         for (int i = 0; i < 16; i++) {
             (*whitePieces[i]).use();
-            (*whitePieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, mainReflector);
+            (*whitePieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection);
             (*whitePieces[i]).Draw();
             (*blackPieces[i]).use();
-            (*blackPieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, mainReflector);
+            (*blackPieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection);
             (*blackPieces[i]).Draw();
         }
 
@@ -250,6 +255,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
         if (whitePieces[4]->translateVec[2] > sequenceMoves[0][2]) {
             newPosition = whitePieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[0] - (whitePieces[4]->translateToInitialPos)) / 100.0f;
             whitePieces[4]->Move(newPosition);
+            reflectorDirection = newPosition - whitePieces[4]->differenceFromCenter;
         }
         else {
             currentMove = 1; 
@@ -262,6 +268,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
             newPosition = blackPieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[1] - (blackPieces[4]->translateToInitialPos)) / 100.0f;
             blackPieces[4]->Move(newPosition);
             front = -1.0f;
+            reflectorDirection = newPosition - blackPieces[4]->differenceFromCenter;
         }
         else {
             front = -1.0f;
@@ -275,6 +282,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
         if (whitePieces[5]->translateVec[2] > sequenceMoves[2][2]) {
             newPosition = whitePieces[5]->translateVec + (currentTime - sequenceStartTime)* (sequenceMoves[2] - (whitePieces[5]->translateToInitialPos)) / 100.0f;
             whitePieces[5]->Move(newPosition);
+            reflectorDirection = newPosition - whitePieces[5]->differenceFromCenter;
         }
         else {
             currentMove = 3;
@@ -288,6 +296,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
             newPosition = blackPieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[3] - (blackPieces[4]->translateToInitialPos)) / 50.0f;
             blackPieces[4]->Move(newPosition);
             whitePieces[5]->KnockDown(-90 + (currentTime - sequenceStartTime) * 25.0f);
+            reflectorDirection = newPosition - blackPieces[4]->differenceFromCenter;
         }
         else {
             front = -1.0f;
@@ -301,6 +310,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
         if (whitePieces[12]->translateVec[2] > sequenceMoves[4][2]) {
             newPosition = whitePieces[12]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[4] - (whitePieces[12]->translateToInitialPos)) / 100.0f;
             whitePieces[12]->Move(newPosition);
+            reflectorDirection = newPosition - whitePieces[12]->differenceFromCenter;
         }
         else {
             currentMove = 5;
@@ -314,5 +324,6 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
         if (afterObject) { 
             camera.SetViewMatrix(glm::lookAt(glm::vec3(0.0f, 25.0f, newPosition[2] + front * 25.0f), glm::vec3(0.0f, 0.0f, -front * 15.0f), camera.Up));
         }
+        
     }
 }

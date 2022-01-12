@@ -123,6 +123,7 @@ public:
         WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
         Yaw = YAW;
         Pitch = PITCH;
+        Zoom = ZOOM;
         Front = glm::vec3(0.0f, 0.0f, -1.0f);
         updateCameraVectors();
     };

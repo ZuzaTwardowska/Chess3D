@@ -9,5 +9,3 @@ newmtl Material
 	illum 2
 	Ns 20
 map_Kd diffuse.png
-map_Bump normal.png
-map_Ks specular.png
