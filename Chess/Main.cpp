@@ -41,7 +41,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // lighting
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 mainReflector(0.0f, 25.0f, 0.0f);
 
 // sequence
 float sequenceStartTime = -1.0f;
@@ -151,16 +151,16 @@ int main()
 
         // BOARD
         board.use();
-        board.set(camera, SCR_WIDTH,SCR_HEIGHT);
+        board.set(camera, SCR_WIDTH,SCR_HEIGHT, mainReflector);
         board.Draw();
 
         // PIECES
         for (int i = 0; i < 16; i++) {
             (*whitePieces[i]).use();
-            (*whitePieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT);
+            (*whitePieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, mainReflector);
             (*whitePieces[i]).Draw();
             (*blackPieces[i]).use();
-            (*blackPieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT);
+            (*blackPieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, mainReflector);
             (*blackPieces[i]).Draw();
         }
 
