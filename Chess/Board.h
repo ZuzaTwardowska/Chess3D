@@ -4,7 +4,7 @@
 
 class Board {
 	Model model = Model("resources/board/board.obj");
-	Shader shader = Shader("boardShader.vs", "boardShader.fs");
+	Shader shader = Shader("phongShader.vs", "phongShader.fs");
 
 public :
 	void use() { shader.use(); }
@@ -22,10 +22,14 @@ public :
 	{
 		shader.setFloat(name, value);
 	}
+	void setBool(const std::string& name, bool value) const
+	{
+		shader.setBool(name, value);
+	}
 	void Draw() {
 		model.Draw(shader);
 	}
-	void set(Camera camera, int width, int height, glm::vec3 reflectors[], glm::vec3 reflectorDirection) {
+	void set(Camera camera, int width, int height, glm::vec3 reflectors[], glm::vec3 reflectorDirection, bool isBlinn, float fogIntensity) {
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 model = glm::mat4(1.0f);
@@ -74,5 +78,8 @@ public :
 		setFloat("spotLight[2].cutOff", glm::cos(glm::radians(3.5f)));
 		setFloat("spotLight[2].outerCutOff", glm::cos(glm::radians(4.5f)));
 
+		setFloat("fogIntensity", fogIntensity);
+		setBool("isBlinn", isBlinn);
+		setBool("isBoard", true);
 	}
 };

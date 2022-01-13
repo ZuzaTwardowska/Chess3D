@@ -166,6 +166,8 @@
   <ItemGroup>
     <None Include="boardShader.fs" />
     <None Include="boardShader.vs" />
+    <None Include="phongShader.fs" />
+    <None Include="phongShader.vs" />
     <None Include="pieceShader.fs" />
     <None Include="pieceShader.vs" />
   </ItemGroup>

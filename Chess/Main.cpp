@@ -47,6 +47,8 @@ glm::vec3 reflectors[] = {
     glm::vec3(0.0f, 25.0f, 0.0f),
 };
 glm::vec3 reflectorDirection = glm::vec3(0.0f, 0.0f, 0.0f);
+bool isBlinn = false;
+float fogIntensity = 0.0f;
 
 // sequence
 float sequenceStartTime = -1.0f;
@@ -156,16 +158,16 @@ int main()
 
         // BOARD
         board.use();
-        board.set(camera, SCR_WIDTH,SCR_HEIGHT, reflectors, reflectorDirection);
+        board.set(camera, SCR_WIDTH,SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity);
         board.Draw();
 
         // PIECES
         for (int i = 0; i < 16; i++) {
             (*whitePieces[i]).use();
-            (*whitePieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection);
+            (*whitePieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity);
             (*whitePieces[i]).Draw();
             (*blackPieces[i]).use();
-            (*blackPieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection);
+            (*blackPieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity);
             (*blackPieces[i]).Draw();
         }
 
@@ -208,6 +210,14 @@ void processInput(GLFWwindow* window)
         afterObject = true;
         camera.ObjectCamera(deltaTime);
     }
+    if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
+        isBlinn = true;
+    if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
+        isBlinn = false;
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+        fogIntensity = 0.5f;
+    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+        fogIntensity = 0.0f;
 
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         startSequence();
