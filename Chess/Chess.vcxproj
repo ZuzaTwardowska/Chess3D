@@ -154,6 +154,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="Knight.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Pawn.h" />
@@ -164,14 +165,10 @@
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="boardShader.fs" />
-    <None Include="boardShader.vs" />
     <None Include="gourardShader.fs" />
     <None Include="gourardShader.vs" />
     <None Include="phongShader.fs" />
     <None Include="phongShader.vs" />
-    <None Include="pieceShader.fs" />
-    <None Include="pieceShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,12 +1,18 @@
 #pragma once
 #include "Model.h"
 #include "Shader.h"
+#include "Camera.h"
+#include <cmath>
 
-class Board {
-	Model model = Model("resources/board/board.obj");
+class Light {
+	Model model = Model("resources/light/light.obj");
 	Shader shader = Shader("phongShader.vs", "phongShader.fs");
 
-public :
+public:
+	glm::vec3 position;
+	float yrotation;
+	float xrotation = 0;
+	Light(glm::vec3 pos, float rot) :position(pos), yrotation(rot) {};
 	void use() { shader.use(); }
 	void setMat4(const std::string& name, const glm::mat4& mat) const {
 		shader.setMat4(name, mat);
@@ -33,28 +39,30 @@ public :
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		model = glm::translate(model, position);
+		model = glm::rotate(model, yrotation, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, xrotation, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	
 		setMat4("projection", projection);
 		setMat4("view", view);
 		setMat4("model", model);
 
 		setInt("material.diffuse", 0);
 		setInt("material.specular", 1);
-		setFloat("material.shininess", 64.0f);
+		setFloat("material.shininess", 84.0f);
 
 		setVec3("viewPos", camera.Position);
 
 		setVec3("spotLight[0].position", reflectors[0]);
-		setVec3("spotLight[0].direction", glm::vec3(0.0f, 0.0f, 0.0f)-reflectors[0]);
+		setVec3("spotLight[0].direction", glm::vec3(0.0f, 0.0f, 0.0f) - reflectors[0]);
 		setVec3("spotLight[0].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
 		setVec3("spotLight[0].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
 		setVec3("spotLight[0].specular", glm::vec3(1.0f, 1.0f, 1.0f));
-		setFloat("spotLight[0].constant", 1.0f); 
-		setFloat("spotLight[0].linear", 0.003f); 
+		setFloat("spotLight[0].constant", 1.0f);
+		setFloat("spotLight[0].linear", 0.003f);
 		setFloat("spotLight[0].quadratic", 0.0012f);
-		setFloat("spotLight[0].cutOff", glm::cos(glm::radians(22.5f))); 
-		setFloat("spotLight[0].outerCutOff", glm::cos(glm::radians(40.0f))); 
+		setFloat("spotLight[0].cutOff", glm::cos(glm::radians(22.5f)));
+		setFloat("spotLight[0].outerCutOff", glm::cos(glm::radians(40.0f)));
 
 		setVec3("spotLight[1].position", reflectors[1]);
 		setVec3("spotLight[1].direction", glm::vec3(0.0f, 0.0f, 0.0f) - reflectors[1]);
@@ -80,12 +88,17 @@ public :
 
 		setFloat("fogIntensity", fogIntensity);
 		setBool("isBlinn", isBlinn);
-		setBool("isBoard", true);
+		setBool("isBoard", false);
+
 	}
 	void setToGourard() {
 		shader = Shader("gourardShader.vs", "gourardShader.fs");
 	}
 	void setToPhong() {
 		shader = Shader("phongShader.vs", "phongShader.fs");
+	}
+	void changeDirection(glm::vec3 direction) {
+		xrotation = atan((direction[0] - position[0]) / (direction[2] - position[2]));
+		yrotation = atan((direction[2] - position[2]) / (direction[0] - position[0]));
 	}
 };

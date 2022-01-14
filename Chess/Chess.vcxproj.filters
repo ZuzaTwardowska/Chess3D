@@ -65,20 +65,11 @@
     <ClInclude Include="Queen.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="boardShader.vs">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="boardShader.fs">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="pieceShader.vs">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="pieceShader.fs">
-      <Filter>shaders</Filter>
-    </None>
     <None Include="phongShader.vs">
       <Filter>shaders</Filter>
     </None>

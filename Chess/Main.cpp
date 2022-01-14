@@ -17,15 +17,16 @@
 #include "Bishop.h"
 #include "Queen.h"
 #include "King.h"
+#include "Light.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
-void setToGourard(Board board, Piece* whitePieces[], Piece* blackPieces[]);
-void setToPhong(Board board, Piece* whitePieces[], Piece* blackPieces[]);
+void setToGourard(Board board, Piece* whitePieces[], Piece* blackPieces[], Light* light[]);
+void setToPhong(Board board, Piece* whitePieces[], Piece* blackPieces[], Light* light[]);
 void startSequence();
-void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]);
+void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[], Light* light[]);
 
 // settings
 const unsigned int SCR_WIDTH = 1500;
@@ -44,9 +45,9 @@ float lastFrame = 0.0f;
 
 // lighting
 glm::vec3 reflectors[] = {
-    glm::vec3(20.0f, 25.0f, 0.0f),
-    glm::vec3(-20.0f, 25.0f, 0.0f), 
-    glm::vec3(0.0f, 25.0f, 0.0f),
+    glm::vec3(15.0f, 10.0f, 0.0f),
+    glm::vec3(-15.0f, 10.0f, 0.0f), 
+    glm::vec3(0.0f, 10.0f, 0.0f),
 };
 glm::vec3 reflectorDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 bool isBlinn = false;
@@ -103,6 +104,11 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     Board board;
+    Light* light[] = {
+        new Light(glm::vec3(15.0f, 10.0f, 0.0f), glm::radians(215.0f)),
+        new Light(glm::vec3(-15.0f, 10.0f, 0.0f), glm::radians(-35.0f)),
+        new Light(glm::vec3(0.0f, 10.0f, 0.0f), glm::radians(-90.0f)),
+    };
     float left = -0.7f;
     float xStep = 2.55f;
     Piece* whitePieces[] = {
@@ -151,20 +157,26 @@ int main()
         lastFrame = currentFrame;
 
         processInput(window);
-        if(isPhong) setToPhong(board, whitePieces, blackPieces);
-        else setToGourard(board, whitePieces, blackPieces);
+        if(isPhong) setToPhong(board, whitePieces, blackPieces, light);
+        else setToGourard(board, whitePieces, blackPieces, light);
 
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // MOVE SEQUENCE
         if (currentMove!=-1 && currentMove<5) {
-            runSequence(currentFrame, whitePieces, blackPieces);
+            //runSequence(currentFrame, whitePieces, blackPieces, light);
         }
 
         // BOARD
         board.use();
         board.set(camera, SCR_WIDTH,SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity);
         board.Draw();
+        for (int i = 0; i < 3; i++) {
+            light[i]->use();
+            light[i]->set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity);
+            light[i]->Draw();
+        }
+        
 
         // PIECES
         for (int i = 0; i < 16; i++) {
@@ -182,6 +194,9 @@ int main()
     for (int i = 0; i < 16; i++) {
         free(whitePieces[i]);
         free(blackPieces[i]);
+    }
+    for (int i = 0; i < 3; i++) {
+        free(light[i]);
     }
     glfwTerminate();
     return 0;
@@ -266,7 +281,7 @@ void startSequence() {
         sequenceStartTime = (float)glfwGetTime();
 }
 
-void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) {
+void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[], Light* light[]) {
     glm::vec3 newPosition = glm::vec3(-100.0f,-100.f,-100.0f);
     float front = 1.8f;
     switch (currentMove) {
@@ -330,6 +345,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
             newPosition = whitePieces[12]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[4] - (whitePieces[12]->translateToInitialPos)) / 100.0f;
             whitePieces[12]->Move(newPosition);
             reflectorDirection = newPosition - whitePieces[12]->differenceFromCenter;
+            light[3]->changeDirection(reflectorDirection);
         }
         else {
             currentMove = 5;
@@ -348,17 +364,23 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
     }
 }
 
-void setToGourard(Board board, Piece* whitePieces[], Piece* blackPieces[]) {
+void setToGourard(Board board, Piece* whitePieces[], Piece* blackPieces[], Light* light[]) {
     board.setToGourard();
     for (int i = 0; i < 16; i++) {
         whitePieces[i]->setToGourard();
         blackPieces[i]->setToGourard();
     }
+    for (int i = 0; i < 3; i++) {
+        light[i]->setToGourard();
+    }
 }
-void setToPhong(Board board, Piece* whitePieces[], Piece* blackPieces[]) {
+void setToPhong(Board board, Piece* whitePieces[], Piece* blackPieces[], Light* light[]) {
     board.setToPhong();
     for (int i = 0; i < 16; i++) {
         whitePieces[i]->setToPhong();
         blackPieces[i]->setToPhong();
+    }
+    for (int i = 0; i < 3; i++) {
+        light[i]->setToPhong();
     }
 }

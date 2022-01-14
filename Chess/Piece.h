@@ -85,8 +85,8 @@ public:
 		setFloat("spotLight[2].constant", 1.0f);
 		setFloat("spotLight[2].linear", 0.009f);
 		setFloat("spotLight[2].quadratic", 0.0032f);
-		setFloat("spotLight[2].cutOff", glm::cos(glm::radians(3.5f)));
-		setFloat("spotLight[2].outerCutOff", glm::cos(glm::radians(4.5f)));
+		setFloat("spotLight[2].cutOff", glm::cos(glm::radians(10.5f)));
+		setFloat("spotLight[2].outerCutOff", glm::cos(glm::radians(15.5f)));
 
 		setFloat("fogIntensity", fogIntensity);
 		setBool("isBlinn", isBlinn);
