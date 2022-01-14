@@ -53,6 +53,9 @@ glm::vec3 reflectorDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 bool isBlinn = false;
 float fogIntensity = 0.0f;
 bool isPhong = true;
+bool isDay = false;
+bool isFog = false;
+float lightIntensity = 0.2f;
 
 // sequence
 float sequenceStartTime = -1.0f;
@@ -97,9 +100,6 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-
-    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-    // stbi_set_flip_vertically_on_load(true);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -149,7 +149,6 @@ int main()
     };
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
     while (!glfwWindowShouldClose(window))
     {
         float currentFrame = glfwGetTime();
@@ -160,6 +159,19 @@ int main()
         if(isPhong) setToPhong(board, whitePieces, blackPieces, light);
         else setToGourard(board, whitePieces, blackPieces, light);
 
+        if (isDay && lightIntensity<0.6f) {
+            lightIntensity += 0.001f;
+        }
+        if (!isDay && lightIntensity > 0.2f) {
+            lightIntensity -= 0.001f;
+        }
+        if (isFog && fogIntensity < 0.5f) {
+            fogIntensity += 0.005f;
+        }
+        if (!isFog && fogIntensity > 0.0f) {
+            fogIntensity -= 0.005f;
+        }
+
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // MOVE SEQUENCE
@@ -169,11 +181,11 @@ int main()
 
         // BOARD
         board.use();
-        board.set(camera, SCR_WIDTH,SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity);
+        board.set(camera, SCR_WIDTH,SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity, lightIntensity);
         board.Draw();
         for (int i = 0; i < 3; i++) {
             light[i]->use();
-            light[i]->set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity);
+            light[i]->set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity, lightIntensity);
             light[i]->Draw();
         }
         
@@ -181,10 +193,10 @@ int main()
         // PIECES
         for (int i = 0; i < 16; i++) {
             (*whitePieces[i]).use();
-            (*whitePieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity);
+            (*whitePieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity, lightIntensity);
             (*whitePieces[i]).Draw();
             (*blackPieces[i]).use();
-            (*blackPieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity);
+            (*blackPieces[i]).set(camera, SCR_WIDTH, SCR_HEIGHT, reflectors, reflectorDirection, isBlinn, fogIntensity, lightIntensity);
             (*blackPieces[i]).Draw();
         }
 
@@ -235,13 +247,17 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
         isBlinn = false;
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
-        fogIntensity = 0.5f;
+        isFog = true;
     if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
-        fogIntensity = 0.0f;
+        isFog = false;
     if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
         isPhong = false;
     if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
         isPhong = true;
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        isDay = true;
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        isDay = false;
 
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         startSequence();
@@ -290,6 +306,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[], 
             newPosition = whitePieces[4]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[0] - (whitePieces[4]->translateToInitialPos)) / 100.0f;
             whitePieces[4]->Move(newPosition);
             reflectorDirection = newPosition - whitePieces[4]->differenceFromCenter;
+            light[2]->changeDirection(reflectorDirection);
         }
         else {
             currentMove = 1; 
@@ -303,6 +320,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[], 
             blackPieces[4]->Move(newPosition);
             front = -1.0f;
             reflectorDirection = newPosition - blackPieces[4]->differenceFromCenter;
+            light[2]->changeDirection(reflectorDirection);
         }
         else {
             front = -1.0f;
@@ -317,6 +335,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[], 
             newPosition = whitePieces[5]->translateVec + (currentTime - sequenceStartTime)* (sequenceMoves[2] - (whitePieces[5]->translateToInitialPos)) / 100.0f;
             whitePieces[5]->Move(newPosition);
             reflectorDirection = newPosition - whitePieces[5]->differenceFromCenter;
+            light[2]->changeDirection(reflectorDirection);
         }
         else {
             currentMove = 3;
@@ -331,6 +350,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[], 
             blackPieces[4]->Move(newPosition);
             whitePieces[5]->KnockDown(-90 + (currentTime - sequenceStartTime) * 25.0f);
             reflectorDirection = newPosition - blackPieces[4]->differenceFromCenter;
+            light[2]->changeDirection(reflectorDirection);
         }
         else {
             front = -1.0f;
@@ -345,7 +365,7 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[], 
             newPosition = whitePieces[12]->translateVec + (currentTime - sequenceStartTime) * (sequenceMoves[4] - (whitePieces[12]->translateToInitialPos)) / 100.0f;
             whitePieces[12]->Move(newPosition);
             reflectorDirection = newPosition - whitePieces[12]->differenceFromCenter;
-            light[3]->changeDirection(reflectorDirection);
+            light[2]->changeDirection(reflectorDirection);
         }
         else {
             currentMove = 5;

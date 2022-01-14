@@ -29,7 +29,7 @@ public :
 	void Draw() {
 		model.Draw(shader);
 	}
-	void set(Camera camera, int width, int height, glm::vec3 reflectors[], glm::vec3 reflectorDirection, bool isBlinn, float fogIntensity) {
+	void set(Camera camera, int width, int height, glm::vec3 reflectors[], glm::vec3 reflectorDirection, bool isBlinn, float fogIntensity, float lightIntensity) {
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 model = glm::mat4(1.0f);
@@ -47,7 +47,7 @@ public :
 
 		setVec3("spotLight[0].position", reflectors[0]);
 		setVec3("spotLight[0].direction", glm::vec3(0.0f, 0.0f, 0.0f)-reflectors[0]);
-		setVec3("spotLight[0].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+		setVec3("spotLight[0].ambient", glm::vec3(lightIntensity));
 		setVec3("spotLight[0].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
 		setVec3("spotLight[0].specular", glm::vec3(1.0f, 1.0f, 1.0f));
 		setFloat("spotLight[0].constant", 1.0f); 
@@ -58,7 +58,7 @@ public :
 
 		setVec3("spotLight[1].position", reflectors[1]);
 		setVec3("spotLight[1].direction", glm::vec3(0.0f, 0.0f, 0.0f) - reflectors[1]);
-		setVec3("spotLight[1].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+		setVec3("spotLight[1].ambient", glm::vec3(lightIntensity));
 		setVec3("spotLight[1].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
 		setVec3("spotLight[1].specular", glm::vec3(1.0f, 1.0f, 1.0f));
 		setFloat("spotLight[1].constant", 1.0f);
