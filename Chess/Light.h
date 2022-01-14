@@ -41,7 +41,7 @@ public:
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, position);
 		model = glm::rotate(model, yrotation, glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::rotate(model, xrotation, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, xrotation, glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));	
 		setMat4("projection", projection);
 		setMat4("view", view);
@@ -98,7 +98,7 @@ public:
 		shader = Shader("phongShader.vs", "phongShader.fs");
 	}
 	void changeDirection(glm::vec3 direction) {
-		xrotation = atan((direction[0] - position[0]) / (direction[2] - position[2]));
-		yrotation = atan((direction[2] - position[2]) / (direction[0] - position[0]));
+		yrotation = glm::radians(-90.0f) - atan((-direction[0] + position[0]) / (-direction[1] + position[1]));
+		xrotation = atan((-direction[2] + position[2]) / (-direction[1] + position[1]));
 	}
 };
