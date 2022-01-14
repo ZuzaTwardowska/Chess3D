@@ -98,4 +98,10 @@ public:
 	void KnockDown(float angle) {
 		rotationValue = glm::radians(angle);
 	}
+	void setToGourard() {
+		shader = Shader("gourardShader.vs", "gourardShader.fs");
+	}
+	void setToPhong() {
+		shader = Shader("phongShader.vs", "phongShader.fs");
+	}
 };

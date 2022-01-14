@@ -82,4 +82,10 @@ public :
 		setBool("isBlinn", isBlinn);
 		setBool("isBoard", true);
 	}
+	void setToGourard() {
+		shader = Shader("gourardShader.vs", "gourardShader.fs");
+	}
+	void setToPhong() {
+		shader = Shader("phongShader.vs", "phongShader.fs");
+	}
 };

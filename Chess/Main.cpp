@@ -22,6 +22,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+void setToGourard(Board board, Piece* whitePieces[], Piece* blackPieces[]);
+void setToPhong(Board board, Piece* whitePieces[], Piece* blackPieces[]);
 void startSequence();
 void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]);
 
@@ -49,6 +51,7 @@ glm::vec3 reflectors[] = {
 glm::vec3 reflectorDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 bool isBlinn = false;
 float fogIntensity = 0.0f;
+bool isPhong = true;
 
 // sequence
 float sequenceStartTime = -1.0f;
@@ -148,6 +151,8 @@ int main()
         lastFrame = currentFrame;
 
         processInput(window);
+        if(isPhong) setToPhong(board, whitePieces, blackPieces);
+        else setToGourard(board, whitePieces, blackPieces);
 
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -218,6 +223,10 @@ void processInput(GLFWwindow* window)
         fogIntensity = 0.5f;
     if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
         fogIntensity = 0.0f;
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+        isPhong = false;
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+        isPhong = true;
 
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         startSequence();
@@ -333,7 +342,23 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[]) 
         if(boundToObject) camera.SetViewMatrix(glm::lookAt(camera.Position, newPosition, camera.Up));
         if (afterObject) { 
             camera.SetViewMatrix(glm::lookAt(glm::vec3(0.0f, 25.0f, newPosition[2] + front * 25.0f), glm::vec3(0.0f, 0.0f, -front * 15.0f), camera.Up));
+            camera.Position = glm::vec3(0.0f, 25.0f, newPosition[2] + front * 25.0f);
         }
         
+    }
+}
+
+void setToGourard(Board board, Piece* whitePieces[], Piece* blackPieces[]) {
+    board.setToGourard();
+    for (int i = 0; i < 16; i++) {
+        whitePieces[i]->setToGourard();
+        blackPieces[i]->setToGourard();
+    }
+}
+void setToPhong(Board board, Piece* whitePieces[], Piece* blackPieces[]) {
+    board.setToPhong();
+    for (int i = 0; i < 16; i++) {
+        whitePieces[i]->setToPhong();
+        blackPieces[i]->setToPhong();
     }
 }

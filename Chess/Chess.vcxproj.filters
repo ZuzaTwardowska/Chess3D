@@ -85,5 +85,11 @@
     <None Include="phongShader.fs">
       <Filter>shaders</Filter>
     </None>
+    <None Include="gourardShader.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="gourardShader.fs">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
