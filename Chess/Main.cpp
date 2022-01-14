@@ -164,7 +164,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // MOVE SEQUENCE
         if (currentMove!=-1 && currentMove<5) {
-            //runSequence(currentFrame, whitePieces, blackPieces, light);
+            runSequence(currentFrame, whitePieces, blackPieces, light);
         }
 
         // BOARD
