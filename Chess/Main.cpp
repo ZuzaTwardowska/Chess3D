@@ -23,8 +23,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
-void setToGourard(Board board, Piece* whitePieces[], Piece* blackPieces[], Light* light[]);
-void setToPhong(Board board, Piece* whitePieces[], Piece* blackPieces[], Light* light[]);
+void setToShader(Board board, Piece* whitePieces[], Piece* blackPieces[], Light* light[], Shader s);
 void startSequence();
 void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[], Light* light[]);
 
@@ -102,52 +101,57 @@ int main()
     }
 
     glEnable(GL_DEPTH_TEST);
-
-    Board board;
+    Shader phongShader = Shader("phongShader.vs", "phongShader.fs");
+    Shader gourardShader = Shader("gourardShader.vs", "gourardShader.fs");
+    phongShader.setDeafult();
+    gourardShader.setDeafult();
+    Board board(phongShader);
     Light* light[] = {
-        new Light(glm::vec3(15.0f, 10.0f, 0.0f), glm::radians(215.0f)),
-        new Light(glm::vec3(-15.0f, 10.0f, 0.0f), glm::radians(-35.0f)),
-        new Light(glm::vec3(0.0f, 10.0f, 0.0f), glm::radians(-90.0f)),
+        new Light(glm::vec3(15.0f, 10.0f, 0.0f), glm::radians(215.0f), phongShader),
+        new Light(glm::vec3(-15.0f, 10.0f, 0.0f), glm::radians(-35.0f), phongShader),
+        new Light(glm::vec3(0.0f, 10.0f, 0.0f), glm::radians(-90.0f), phongShader),
     };
     float left = -0.7f;
     float xStep = 2.55f;
     Piece* whitePieces[] = {
-        new Pawn(glm::vec3(left, 0.0f, 0.6f),"white",1,0),
-        new Pawn(glm::vec3(left + xStep, 0.0f, 0.6f), "white",1,1),
-        new Pawn(glm::vec3(left + 2 * xStep, 0.0f, 0.6f), "white",1,2),
-        new Pawn(glm::vec3(left + 3 * xStep, 0.0f, 0.6f), "white",1,3),
-        new Pawn(glm::vec3(left + 4 * xStep, 0.0f, 0.6f), "white",1,4),
-        new Pawn(glm::vec3(left + 5 * xStep, 0.0f, 0.6f), "white",1,5),
-        new Pawn(glm::vec3(left + 6 * xStep, 0.0f, 0.6f), "white",1,6),
-        new Pawn(glm::vec3(left + 7 * xStep, 0.0f, 0.6f), "white",1,7),
-        new Rook(glm::vec3(-17.2f, 0.0f, 17.2f), "white",0,0),
-        new Knight(glm::vec3(-0.5f, 0.0f, 0.8f), "white",0,1),
-        new Bishop(glm::vec3(-0.15f, 0.0f, 0.8f), "white",0,2),
-        new King(glm::vec3(-2.45f, 0.0f, 0.8f), "white",0,4),
-        new Queen(glm::vec3(2.5f, 0.0f, 0.8f), "white",0,3),
-        new Bishop(glm::vec3(7.35f, 0.0f, 0.8f), "white",0,5),
-        new Knight(glm::vec3(12.3f, 0.0f, 0.8f), "white",0,6),
-        new Rook(glm::vec3(0.8f, 0.0f, 17.2f), "white",0,7),
+        new Pawn(glm::vec3(left, 0.0f, 0.6f),"white", phongShader),
+        new Pawn(glm::vec3(left + xStep, 0.0f, 0.6f), "white", phongShader),
+        new Pawn(glm::vec3(left + 2 * xStep, 0.0f, 0.6f), "white", phongShader),
+        new Pawn(glm::vec3(left + 3 * xStep, 0.0f, 0.6f), "white", phongShader),
+        new Pawn(glm::vec3(left + 4 * xStep, 0.0f, 0.6f), "white", phongShader),
+        new Pawn(glm::vec3(left + 5 * xStep, 0.0f, 0.6f), "white", phongShader),
+        new Pawn(glm::vec3(left + 6 * xStep, 0.0f, 0.6f), "white", phongShader),
+        new Pawn(glm::vec3(left + 7 * xStep, 0.0f, 0.6f), "white", phongShader),
+        new Rook(glm::vec3(-17.2f, 0.0f, 17.2f), "white", phongShader),
+        new Knight(glm::vec3(-0.5f, 0.0f, 0.8f), "white", phongShader),
+        new Bishop(glm::vec3(-0.15f, 0.0f, 0.8f), "white", phongShader),
+        new King(glm::vec3(-2.45f, 0.0f, 0.8f), "white", phongShader),
+        new Queen(glm::vec3(2.5f, 0.0f, 0.8f), "white", phongShader),
+        new Bishop(glm::vec3(7.35f, 0.0f, 0.8f), "white", phongShader),
+        new Knight(glm::vec3(12.3f, 0.0f, 0.8f), "white", phongShader),
+        new Rook(glm::vec3(0.8f, 0.0f, 17.2f), "white", phongShader),
     };
     Piece* blackPieces[] = {
-        new Pawn(glm::vec3(left, 0.0f, -12.25f),"black",6,0),
-        new Pawn(glm::vec3(left + xStep, 0.0f, -12.25f), "black",6,1),
-        new Pawn(glm::vec3(left + 2 * xStep, 0.0f, -12.25f), "black",6,2),
-        new Pawn(glm::vec3(left + 3 * xStep, 0.0f, -12.25f), "black",6,3),
-        new Pawn(glm::vec3(left + 4 * xStep, 0.0f, -12.25f), "black",6,4),
-        new Pawn(glm::vec3(left + 5 * xStep, 0.0f, -12.25f), "black",6,5),
-        new Pawn(glm::vec3(left + 6 * xStep, 0.0f, -12.25f), "black",6,6),
-        new Pawn(glm::vec3(left + 7 * xStep, 0.0f, -12.25f), "black",6,7),
-        new Rook(glm::vec3(-17.2f, 0.0f, -0.7f), "black",7,0),
-        new Knight(glm::vec3(-0.5f, 0.0f, -17.15f), "black",7,1),
-        new Bishop(glm::vec3(-0.15f, 0.0f, -17.15f), "black",7,2),
-        new King(glm::vec3(-2.45f, 0.0f, -17.15f), "black",7,4),
-        new Queen(glm::vec3(2.5f, 0.0f, -17.15f), "black",7,3),
-        new Bishop(glm::vec3(7.35f, 0.0f, -17.15f), "black",7,5),
-        new Knight(glm::vec3(12.3f, 0.0f, -17.15f), "black",7,6),
-        new Rook(glm::vec3(0.8f, 0.0f, -0.7f), "black",7,7),
+        new Pawn(glm::vec3(left, 0.0f, -12.25f),"black", phongShader),
+        new Pawn(glm::vec3(left + xStep, 0.0f, -12.25f), "black", phongShader),
+        new Pawn(glm::vec3(left + 2 * xStep, 0.0f, -12.25f), "black", phongShader),
+        new Pawn(glm::vec3(left + 3 * xStep, 0.0f, -12.25f), "black", phongShader),
+        new Pawn(glm::vec3(left + 4 * xStep, 0.0f, -12.25f), "black", phongShader),
+        new Pawn(glm::vec3(left + 5 * xStep, 0.0f, -12.25f), "black", phongShader),
+        new Pawn(glm::vec3(left + 6 * xStep, 0.0f, -12.25f), "black", phongShader),
+        new Pawn(glm::vec3(left + 7 * xStep, 0.0f, -12.25f), "black", phongShader),
+        new Rook(glm::vec3(-17.2f, 0.0f, -0.7f), "black", phongShader),
+        new Knight(glm::vec3(-0.5f, 0.0f, -17.15f), "black", phongShader),
+        new Bishop(glm::vec3(-0.15f, 0.0f, -17.15f), "black", phongShader),
+        new King(glm::vec3(-2.45f, 0.0f, -17.15f), "black", phongShader),
+        new Queen(glm::vec3(2.5f, 0.0f, -17.15f), "black", phongShader),
+        new Bishop(glm::vec3(7.35f, 0.0f, -17.15f), "black", phongShader),
+        new Knight(glm::vec3(12.3f, 0.0f, -17.15f), "black", phongShader),
+        new Rook(glm::vec3(0.8f, 0.0f, -0.7f), "black", phongShader),
     };
 
+    
+    
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     while (!glfwWindowShouldClose(window))
     {
@@ -156,16 +160,16 @@ int main()
         lastFrame = currentFrame;
 
         processInput(window);
-        if(isPhong) setToPhong(board, whitePieces, blackPieces, light);
-        else setToGourard(board, whitePieces, blackPieces, light);
+        if(isPhong) setToShader(board, whitePieces, blackPieces, light, phongShader);
+        else setToShader(board, whitePieces, blackPieces, light, gourardShader);
 
         if (isDay && lightIntensity<0.6f) {
-            lightIntensity += 0.001f;
+            lightIntensity += 0.005f;
         }
         if (!isDay && lightIntensity > 0.2f) {
-            lightIntensity -= 0.001f;
+            lightIntensity -= 0.005f;
         }
-        if (isFog && fogIntensity < 0.5f) {
+        if (isFog && fogIntensity < 0.3f) {
             fogIntensity += 0.005f;
         }
         if (!isFog && fogIntensity > 0.0f) {
@@ -377,30 +381,19 @@ void runSequence(float currentTime, Piece* whitePieces[], Piece* blackPieces[], 
     if (newPosition != glm::vec3(-100.0f, -100.f, -100.0f)) {
         if(boundToObject) camera.SetViewMatrix(glm::lookAt(camera.Position, newPosition, camera.Up));
         if (afterObject) { 
-            camera.SetViewMatrix(glm::lookAt(glm::vec3(0.0f, 25.0f, newPosition[2] + front * 25.0f), glm::vec3(0.0f, 0.0f, -front * 15.0f), camera.Up));
+            camera.SetViewMatrix(glm::lookAt(glm::vec3(0.0f, 25.0f, newPosition[2] + front * 25.0f), glm::vec3(0.0f, 0.0f, -front * 18.0f), camera.Up));
             camera.Position = glm::vec3(0.0f, 25.0f, newPosition[2] + front * 25.0f);
         }
-        
     }
 }
 
-void setToGourard(Board board, Piece* whitePieces[], Piece* blackPieces[], Light* light[]) {
-    board.setToGourard();
+void setToShader(Board board, Piece* whitePieces[], Piece* blackPieces[], Light* light[], Shader s) {
+    board.setShader(s);
     for (int i = 0; i < 16; i++) {
-        whitePieces[i]->setToGourard();
-        blackPieces[i]->setToGourard();
+        whitePieces[i]->setShader(s);
+        blackPieces[i]->setShader(s);
     }
     for (int i = 0; i < 3; i++) {
-        light[i]->setToGourard();
-    }
-}
-void setToPhong(Board board, Piece* whitePieces[], Piece* blackPieces[], Light* light[]) {
-    board.setToPhong();
-    for (int i = 0; i < 16; i++) {
-        whitePieces[i]->setToPhong();
-        blackPieces[i]->setToPhong();
-    }
-    for (int i = 0; i < 3; i++) {
-        light[i]->setToPhong();
+        light[i]->setShader(s);
     }
 }

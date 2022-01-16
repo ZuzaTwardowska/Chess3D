@@ -7,14 +7,13 @@ class Piece {
 	Shader shader;
 
 public:
-	int x, y;
 	bool isKnockedDown = false;
 	glm::vec3 translateToInitialPos;
 	glm::vec3 differenceFromCenter;
 	float rotationValue = glm::radians(-90.0f);
 	glm::vec3 translateVec;
 	glm::vec3 scaleMatrix = glm::vec3(0.5f, 0.5f, 0.5f);
-	Piece(string model, Shader shader, glm::vec3 initialPos, int x, int y) :model(Model(model)), shader(shader), translateToInitialPos(initialPos), x(x), y(y), translateVec(initialPos) {};
+	Piece(string model, Shader shader, glm::vec3 initialPos) :model(Model(model)), shader(shader), translateToInitialPos(initialPos), translateVec(initialPos) {};
 	void use() { shader.use(); }
 	void setMat4(const std::string& name, const glm::mat4& mat) const {
 		shader.setMat4(name, mat);
@@ -49,47 +48,22 @@ public:
 		setMat4("view", view);
 		setMat4("model", model);
 
-		setInt("material.diffuse", 0);
-		setInt("material.specular", 1);
-		setFloat("material.shininess", 64.0f);
-
 		setVec3("viewPos", camera.Position);
 
 		setVec3("spotLight[0].position", reflectors[0]);
 		setVec3("spotLight[0].direction", glm::vec3(0.0f, 0.0f, 0.0f) - reflectors[0]);
 		setVec3("spotLight[0].ambient", glm::vec3(lightIntensity));
-		setVec3("spotLight[0].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-		setVec3("spotLight[0].specular", glm::vec3(1.0f, 1.0f, 1.0f));
-		setFloat("spotLight[0].constant", 1.0f);
-		setFloat("spotLight[0].linear", 0.003f);
-		setFloat("spotLight[0].quadratic", 0.0012f);
-		setFloat("spotLight[0].cutOff", glm::cos(glm::radians(22.5f)));
-		setFloat("spotLight[0].outerCutOff", glm::cos(glm::radians(40.0f)));
 
 		setVec3("spotLight[1].position", reflectors[1]);
 		setVec3("spotLight[1].direction", glm::vec3(0.0f, 0.0f, 0.0f) - reflectors[1]);
 		setVec3("spotLight[1].ambient", glm::vec3(lightIntensity));
-		setVec3("spotLight[1].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-		setVec3("spotLight[1].specular", glm::vec3(1.0f, 1.0f, 1.0f));
-		setFloat("spotLight[1].constant", 1.0f);
-		setFloat("spotLight[1].linear", 0.003f);
-		setFloat("spotLight[1].quadratic", 0.0012f);
-		setFloat("spotLight[1].cutOff", glm::cos(glm::radians(22.5f)));
-		setFloat("spotLight[1].outerCutOff", glm::cos(glm::radians(40.0f)));
 
 		setVec3("spotLight[2].position", reflectors[2]);
 		setVec3("spotLight[2].direction", reflectorDirection - reflectors[2]);
-		setVec3("spotLight[2].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-		setVec3("spotLight[2].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-		setVec3("spotLight[2].specular", glm::vec3(1.0f, 1.0f, 1.0f));
-		setFloat("spotLight[2].constant", 1.0f);
-		setFloat("spotLight[2].linear", 0.009f);
-		setFloat("spotLight[2].quadratic", 0.0032f);
-		setFloat("spotLight[2].cutOff", glm::cos(glm::radians(10.5f)));
-		setFloat("spotLight[2].outerCutOff", glm::cos(glm::radians(15.5f)));
 
 		setFloat("fogIntensity", fogIntensity);
 		setBool("isBlinn", isBlinn);
+
 		setBool("isBoard", false);
 	}
 	void Move(glm::vec3 moveVector) {
@@ -98,10 +72,7 @@ public:
 	void KnockDown(float angle) {
 		rotationValue = glm::radians(angle);
 	}
-	void setToGourard() {
-		shader = Shader("gourardShader.vs", "gourardShader.fs");
-	}
-	void setToPhong() {
-		shader = Shader("phongShader.vs", "phongShader.fs");
+	void setShader(Shader s) {
+		shader = s;
 	}
 };

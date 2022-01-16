@@ -4,7 +4,7 @@
 
 class Queen :public Piece {
 public:
-	Queen(glm::vec3 initialPos, string color, int x, int y) :Piece("resources/pieces/" + color + "/Queen/Queen.obj", Shader("phongShader.vs", "phongShader.fs"), initialPos, x, y) {
+	Queen(glm::vec3 initialPos, string color, Shader s) :Piece("resources/pieces/" + color + "/Queen/Queen.obj", s, initialPos) {
 		differenceFromCenter = glm::vec3(1.2f, 0.0f, -8.2f);
 	};
 };

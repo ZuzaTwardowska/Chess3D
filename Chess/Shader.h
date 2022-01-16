@@ -161,6 +161,37 @@ public:
         glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 
+    void setDeafult() {
+        use();
+        setInt("material.diffuse", 0);
+        setInt("material.specular", 1);
+        setFloat("material.shininess", 64.0f);
+
+        setVec3("spotLight[0].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+        setVec3("spotLight[0].specular", glm::vec3(1.0f, 1.0f, 1.0f));
+        setFloat("spotLight[0].constant", 1.0f);
+        setFloat("spotLight[0].linear", 0.003f);
+        setFloat("spotLight[0].quadratic", 0.0012f);
+        setFloat("spotLight[0].cutOff", glm::cos(glm::radians(22.5f)));
+        setFloat("spotLight[0].outerCutOff", glm::cos(glm::radians(40.0f)));
+
+        setVec3("spotLight[1].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+        setVec3("spotLight[1].specular", glm::vec3(1.0f, 1.0f, 1.0f));
+        setFloat("spotLight[1].constant", 1.0f);
+        setFloat("spotLight[1].linear", 0.003f);
+        setFloat("spotLight[1].quadratic", 0.0012f);
+        setFloat("spotLight[1].cutOff", glm::cos(glm::radians(22.5f)));
+        setFloat("spotLight[1].outerCutOff", glm::cos(glm::radians(40.0f)));
+
+        setVec3("spotLight[2].ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+        setVec3("spotLight[2].diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+        setVec3("spotLight[2].specular", glm::vec3(1.0f, 1.0f, 1.0f));
+        setFloat("spotLight[2].constant", 1.0f);
+        setFloat("spotLight[2].linear", 0.009f);
+        setFloat("spotLight[2].quadratic", 0.0032f);
+        setFloat("spotLight[2].cutOff", glm::cos(glm::radians(10.5f)));
+        setFloat("spotLight[2].outerCutOff", glm::cos(glm::radians(15.5f)));
+    }
 private:
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------

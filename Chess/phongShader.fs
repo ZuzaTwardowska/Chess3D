@@ -63,12 +63,12 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     if(!isBlinn)
     {
         vec3 reflectDir = reflect(-lightDir, normal);
-        spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess); //8.0
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     }
     else
     {
-        vec3 halfwayDir = normalize(lightDir + viewDir);  
-        spec = pow(max(dot(normalize(normal), halfwayDir), 0.0), 32.0);
+        vec3 halfDir = normalize(lightDir + viewDir);  
+        spec = pow(max(dot(normalize(normal), halfDir), 0.0), 32.0);
     }
     // attenuation
     float distance = length(light.position - fragPos);
@@ -89,9 +89,9 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 
 float CalcFog() {
     if (fogIntensity == 0) return 1;
-    float gradient = (fogIntensity * fogIntensity - 50 * fogIntensity + 120) / 2;
+    float gradient = (fogIntensity * fogIntensity - 50 * fogIntensity + 60);
     float distance = length(viewPos - FragPos);
-    float fog = exp(-pow((distance / gradient), 5));
+    float fog = exp(-pow((distance / gradient), 4));
     fog = clamp(fog, 0.0, 1.0);
     return fog;
 }

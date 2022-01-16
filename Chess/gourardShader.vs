@@ -56,13 +56,11 @@ void main()
     {
         gl_Position = projection * view * model * vec4(aPos, 1.0);
     }
-
-
-    vec3 result = CalcSpotLight(spotLight[0], Normal, FragPos, TexCoords);
+    vec3 result = CalcSpotLight(spotLight[0], Normal, aPos, TexCoords);
     for(int i = 1; i < 3; i++)
-        result += CalcSpotLight(spotLight[i], Normal, FragPos, TexCoords);  
+        result += CalcSpotLight(spotLight[i], Normal, aPos, TexCoords);  
     
-    float fog = CalcFog(FragPos);
+    float fog = CalcFog(aPos);
     result = mix(vec3(0.05f), result, fog);
     
     FragColor = vec4(result, 1.0);
@@ -71,20 +69,20 @@ void main()
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec2 TexCoords)
 {
     vec3 lightDir = normalize(light.position - fragPos);
+    vec3 viewDir = normalize(viewPos - fragPos);
     // diffuse shading
     float diff = max(dot(normalize(normal), lightDir), 0.0);
     // specular shading
     float spec = 0.0f;
-    vec3 viewDir = normalize(viewPos - fragPos);
     if(!isBlinn)
     {
         vec3 reflectDir = reflect(-lightDir, normal);
-        spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess); //8.0
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     }
     else
     {
-        vec3 halfwayDir = normalize(lightDir + viewDir);  
-        spec = pow(max(dot(normalize(normal), halfwayDir), 0.0), 32.0);
+        vec3 halfDir = normalize(lightDir + viewDir);  
+        spec = pow(max(dot(normalize(normal), halfDir), 0.0), 32.0);
     }
     // attenuation
     float distance = length(light.position - fragPos);
@@ -105,7 +103,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec2 TexCoords)
 
 float CalcFog(vec3 FragPos) {
     if (fogIntensity == 0) return 1;
-    float gradient = (fogIntensity * fogIntensity - 50 * fogIntensity + 120) / 2;
+    float gradient = (fogIntensity * fogIntensity - 50 * fogIntensity + 60);
     float distance = length(viewPos - FragPos);
     float fog = exp(-pow((distance / gradient), 5));
     fog = clamp(fog, 0.0, 1.0);

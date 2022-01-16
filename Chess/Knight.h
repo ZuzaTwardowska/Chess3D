@@ -4,7 +4,7 @@
 
 class Knight :public Piece {
 public:
-	Knight(glm::vec3 initialPos, string color, int x, int y) :Piece("resources/pieces/" + color + "/Knight/Knight.obj", Shader("phongShader.vs", "phongShader.fs"), initialPos, x, y) {
+	Knight(glm::vec3 initialPos, string color, Shader s) :Piece("resources/pieces/" + color + "/Knight/Knight.obj", s, initialPos) {
 		differenceFromCenter = glm::vec3(6.0f, 0.0f, -8.4f);
 	};
 };
