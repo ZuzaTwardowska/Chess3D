@@ -29,7 +29,6 @@ struct Material {
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform bool isBoard;
 
 uniform vec3 viewPos;
 uniform Material material;
@@ -48,19 +47,12 @@ void main()
     vec3 FragPos = vec3(model * vec4(aPos, 1.0));
     vec3 Normal = mat3(transpose(inverse(model))) * aNormal;
     vec2 TexCoords = aTexCoords;    
-    if(isBoard) 
-    {
-        gl_Position = projection * view * model * vec4(FragPos, 1.0);
-    }
-    else
-    {
-        gl_Position = projection * view * model * vec4(aPos, 1.0);
-    }
-    vec3 result = CalcSpotLight(spotLight[0], Normal, aPos, TexCoords);
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    vec3 result = CalcSpotLight(spotLight[0], Normal, FragPos, TexCoords);
     for(int i = 1; i < 3; i++)
-        result += CalcSpotLight(spotLight[i], Normal, aPos, TexCoords);  
+        result += CalcSpotLight(spotLight[i], Normal, FragPos, TexCoords);  
     
-    float fog = CalcFog(aPos);
+    float fog = CalcFog(FragPos);
     result = mix(vec3(0.05f), result, fog);
     
     FragColor = vec4(result, 1.0);

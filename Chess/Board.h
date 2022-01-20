@@ -55,8 +55,6 @@ public :
 
 		setFloat("fogIntensity", fogIntensity);
 		setBool("isBlinn", isBlinn);
-
-		setBool("isBoard", true);
 	}
 	void setShader(Shader s) {
 		shader = s;

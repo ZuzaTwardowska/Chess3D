@@ -63,8 +63,6 @@ public:
 
 		setFloat("fogIntensity", fogIntensity);
 		setBool("isBlinn", isBlinn);
-
-		setBool("isBoard", false);
 	}
 	void Move(glm::vec3 moveVector) {
 		translateVec = moveVector;
